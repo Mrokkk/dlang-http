@@ -1,0 +1,6 @@
+name "http_server"
+description "A simple vibe.d server application."
+authors "Mrokkk"
+copyright "Copyright © 2017, Mrokkk"
+license "MIT"
+dependency "vibe-d" version="~>0.7.30"
