@@ -24,9 +24,26 @@
                     |#{entry.size}
         td(width="30%", style="vertical-align: middle;") #{entry.timeLastModified}
 
+- void goBackEntry()
+    tr
+        td(width="2%", style="vertical-align: middle;")
+            i(class="glyphicon glyphicon-folder-open")
+        td(width="38%", style="vertical-align: middle;")
+            a(href='..') Go back ...
+        td(width="30%", style="vertical-align: middle;")
+        td(width="30%", style="vertical-align: middle;")
+
 - void searchForm()
     div(class="input-group")
         input(type="text", class="form-control", name="search", placeholder="Search...", style="width: 300px;")
         div(class="input-group-btn")
             button(class="btn btn-default", type="submit")
                 i(class="glyphicon glyphicon-search")
+
+- void tableHead()
+    thead
+        tr
+            th
+            th Name
+            th Size
+            th Modification date

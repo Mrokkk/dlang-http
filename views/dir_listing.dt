@@ -13,7 +13,7 @@ html
         - js("/static/jasny-bootstrap/js/jasny-bootstrap.min.js");
         - css("/static/styles/style.css");
 
-    body(data-spy="scroll", data-target=".navbar", data-offset="200")
+    body(data-spy="scroll", data-target=".navbar")
         nav(class="navbar navbar-inverse navbar-fixed-top")
             ul(class="nav navbar-nav")
                 li
@@ -23,24 +23,11 @@ html
                     form(class="navbar-form")
                         - searchForm();
 
-        div(class="container")
-            hr
-            hr
+        div(class="container", style="padding-top: 60px;")
             table(data-link="row", class="table table-hover table-condensed")
-                thead
-                    tr
-                    th
-                    th Name
-                    th Size
-                    th Modification date
+                - tableHead();
                 - if (baseDir.length > 1)
-                    tr
-                        td(width="2%", style="vertical-align: middle;")
-                            i(class="glyphicon glyphicon-folder-open")
-                        td(width="38%", style="vertical-align: middle;")
-                            a(href='..') Go back ..
-                        td(width="30%", style="vertical-align: middle;")
-                        td(width="30%", style="vertical-align: middle;")
+                    - goBackEntry();
                 - foreach (file; files)
                     - fileEntry(file, baseDir);
 
