@@ -2,11 +2,12 @@ import vibe.vibe;
 import vibe.appmain;
 import vibe.http.server;
 import vibe.http.fileserver;
+import std.stdio;
 import router: createRouter;
 
 void configureLogger() {
-    auto logger = cast(shared)new HTMLLogger("log.html");
-    registerLogger(logger);
+    auto consoleLogger = cast(shared) new FileLogger(stdout, stdout);
+    registerLogger(consoleLogger);
 }
 
 HTTPServerSettings createHTTPSettings() {

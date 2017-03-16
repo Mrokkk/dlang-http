@@ -4,6 +4,20 @@
 - void js(string url)
     script(src='#{url}')
 
+- import std.file: DirEntry;
+- import std.path: asRelativePath;
+
+- void fileEntry(DirEntry file_entry, string baseDirName)
+    td(width="2%", style="vertical-align: middle;")
+        - if (file_entry.isDir)
+            i(class="glyphicon glyphicon-folder-open")
+        - else
+            i(class="glyphicon glyphicon-file")
+    td(width="38%", style="vertical-align: middle;")
+        a(href='/#{file_entry.name}') #{asRelativePath("/" ~ file_entry.name, baseDirName)}
+    td(width="30%", style="vertical-align: middle;") #{file_entry.size}
+    td(width="30%", style="vertical-align: middle;") #{file_entry.timeLastModified}
+
 doctype html
 html
     head
@@ -28,6 +42,7 @@ html
                             div(class="input-group-btn")
                                 button(class="btn btn-default", type="submit")
                                     i(class="glyphicon glyphicon-search")
+
         div(class="container")
             hr
             hr
@@ -38,7 +53,6 @@ html
                     th Name
                     th Size
                     th Modification date
-                - import std.path: asRelativePath;
                 - if (baseDir.length > 1)
                     tr
                         td(width="2%", style="vertical-align: middle;")
@@ -47,13 +61,5 @@ html
                             a(href='..') Go back ..
                 - foreach (file; files)
                     tr
-                        td(width="2%", style="vertical-align: middle;")
-                            - if (file.isDir)
-                                i(class="glyphicon glyphicon-folder-open")
-                            - else
-                                i(class="glyphicon glyphicon-file")
-                        td(width="38%", style="vertical-align: middle;")
-                            a(href='/#{file.name}') #{asRelativePath("/" ~ file.name, baseDir)}
-                        td(width="30%", style="vertical-align: middle;") #{file.size}
-                        td(width="30%", style="vertical-align: middle;") #{file.timeLastModified}
+                        - fileEntry(file, baseDir);
 
