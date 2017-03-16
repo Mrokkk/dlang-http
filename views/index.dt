@@ -13,7 +13,7 @@ html
         - css("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
         - js("https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js");
         - js("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js");
-        - css("styles/style.css");
+        - css("/static/styles/style.css");
 
     body(data-spy="scroll", data-target=".navbar", data-offset="200")
         nav(class="navbar navbar-inverse navbar-fixed-top")
@@ -31,5 +31,22 @@ html
         div(class="container")
             hr
             hr
-            h1 #{title}
+            table(data-link="row", class="table table-hover table-condensed")
+                thead
+                    tr
+                    th
+                    th Name
+                    th Size
+                    th Modification date
+                - foreach (file; files)
+                    tr
+                        td(width="2%", style="vertical-align: middle;")
+                            - if (file.isDir)
+                                i(class="glyphicon glyphicon-folder-open")
+                            - else
+                                i(class="glyphicon glyphicon-file")
+                        td(width="38%", style="vertical-align: middle;")
+                            a(href='#{file.name}') #{baseName(file.name)}
+                        td(width="30%", style="vertical-align: middle;") #{file.size()}
+                        td(width="30%", style="vertical-align: middle;") #{file.timeLastModified()}
 
