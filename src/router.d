@@ -21,7 +21,7 @@ void handleDir(string dirName, HTTPServerResponse res) {
     auto files = dirEntries(dirName, SpanMode.shallow, false);
     auto baseDir = "/" ~ dirName;
     auto title = "Directory listing" ~ baseDir;
-    res.render!("index.dt", title, files, baseDir);
+    res.render!("dir_listing.dt", title, files, baseDir);
 }
 
 void handleSearch(string dirName, string query, HTTPServerResponse res) {
@@ -30,7 +30,7 @@ void handleSearch(string dirName, string query, HTTPServerResponse res) {
         .filter!(a => a.name.match(regex));
     auto baseDir = "/" ~ dirName;
     auto title = "Search result for " ~ query ~ " in " ~ baseDir;
-    res.render!("index.dt", title, files, baseDir);
+    res.render!("dir_listing.dt", title, files, baseDir);
 }
 
 void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
