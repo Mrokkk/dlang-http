@@ -46,7 +46,7 @@ html
                             - else
                                 i(class="glyphicon glyphicon-file")
                         td(width="38%", style="vertical-align: middle;")
-                            a(href='#{file.name}') #{baseName(file.name)}
+                            a(href='/#{file.name}') #{baseName(file.name)}
                         td(width="30%", style="vertical-align: middle;") #{file.size()}
                         td(width="30%", style="vertical-align: middle;") #{file.timeLastModified()}
 

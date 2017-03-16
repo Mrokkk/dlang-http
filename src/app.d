@@ -1,6 +1,6 @@
 import std.file;
 import std.stdio: writeln;
-import std.path: baseName;
+import std.path: baseName, absolutePath;
 
 import vibe.vibe;
 import vibe.appmain;
@@ -10,15 +10,22 @@ import vibe.http.fileserver;
 
 void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     string title = "Directory listing " ~ req.path;
+    auto filename = req.path[1..$];
     writeln(req.path);
-    auto files = dirEntries(req.path[1..$], "*", SpanMode.shallow, false);
+    if (filename.length) {
+        if (!filename.isDir()) {
+            res.writeBody(filename.readText());
+            return;
+        }
+    }
+    auto files = dirEntries(filename, "*", SpanMode.shallow, false);
     res.render!("index.dt", title, files, baseName);
 }
 
 void main() {
     auto settings = new HTTPServerSettings;
     settings.port = 8080;
-    settings.bindAddresses = ["::1", "127.0.0.1"];
+    settings.bindAddresses = ["0.0.0.0"];
     auto router = new URLRouter;
     auto fsettings = new HTTPFileServerSettings;
     fsettings.serverPathPrefix = "/static";
