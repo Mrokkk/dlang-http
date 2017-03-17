@@ -27,7 +27,7 @@
 - void goBackEntry()
     tr
         td(width="2%", style="vertical-align: middle;")
-            i(class="glyphicon glyphicon-folder-open")
+            i(class="glyphicon glyphicon-circle-arrow-up")
         td(width="38%", style="vertical-align: middle;")
             a(href='..') Go back ...
         td(width="30%", style="vertical-align: middle;")
