@@ -1,9 +1,11 @@
 module router;
+
 import std.file;
-import std.stdio: writeln;
 import std.path;
 import std.regex;
 import std.algorithm;
+import std.exception;
+import std.stdio: writeln;
 
 import vibe.vibe;
 import vibe.http.router;
@@ -37,10 +39,13 @@ void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     auto filename = req.path[1..$];
     auto query = req.query;
     if (query.length) {
-        handleSearch(filename, query["search"], res);
+        Exception e = collectException(handleSearch(filename, query["search"], res));
+        if (e) {
+            handleDir(filename, res);
+            return;
+        }
         return;
     }
-    writeln(req.path);
     if (filename.length) {
         if (!filename.isDir()) {
             handleFile(filename, res);
