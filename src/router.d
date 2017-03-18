@@ -12,17 +12,6 @@ import vibe.inet.path;
 import vibe.http.router;
 import vibe.http.fileserver;
 
-string humanReadableSize(ulong size) {
-    float fsize = size;
-    auto suffix = "B";
-    foreach (unit; ["", "Ki", "Mi", "Gi"]) {
-        if (fsize < 1024)
-            return format("%3.1f%s%s", fsize, unit, suffix);
-        fsize /= 1024.0;
-    }
-    return format("%.1f%s%s", fsize, "Ti", suffix);
-}
-
 void handleFile(string filename, HTTPServerRequest req, HTTPServerResponse res) {
     auto query = req.query;
     if (query.length) {
