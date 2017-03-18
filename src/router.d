@@ -10,22 +10,31 @@ import std.stdio: writeln;
 import vibe.vibe;
 import vibe.http.router;
 
-void handleFile(string filename, HTTPServerResponse res) {
-    if (filename.endsWith(".html")) {
-        res.writeBody(filename.readText(), "text/html");
+void handleFile(string filename, HTTPServerRequest req, HTTPServerResponse res) {
+    auto query = req.query;
+    if (query.length) {
+        if (!collectException(query["download"])) {
+            res.writeBody(filename.readText());
+            return;
+        }
     }
-    else {
-        auto title = "File content";
-        auto file_content = filename.readText();
-        res.render!("file.dt", title, file_content);
-    }
+    auto title = "File content";
+    auto file_content = filename.readText();
+    auto dirList = pathSplitter("/" ~ filename);
+    res.render!("file.dt", dirList, file_content);
 }
 
-void handleDir(string dirName, HTTPServerResponse res) {
+void handleDir(string dirName, HTTPServerRequest req, HTTPServerResponse res) {
+    auto query = req.query;
+    if (query.length) {
+        if (!collectException(handleSearch(dirName, query["search"], res))) {
+            return;
+        }
+    }
     auto files = dirEntries(dirName, SpanMode.shallow, false);
     auto baseDir = "/" ~ dirName;
-    auto title = "Directory listing" ~ baseDir;
-    res.render!("dir_listing.dt", title, files, baseDir);
+    auto dirList = pathSplitter("/" ~ dirName);
+    res.render!("dir_listing.dt", dirList, files, baseDir);
 }
 
 void handleSearch(string dirName, string query, HTTPServerResponse res) {
@@ -33,28 +42,19 @@ void handleSearch(string dirName, string query, HTTPServerResponse res) {
     auto files = dirEntries(dirName, SpanMode.depth)
         .filter!(a => a.name.match(regex));
     auto baseDir = "/" ~ dirName;
-    auto title = "Search result for " ~ query ~ " in " ~ baseDir;
-    res.render!("dir_listing.dt", title, files, baseDir);
+    auto dirList = [""];
+    res.render!("dir_listing.dt", dirList, files, baseDir);
 }
 
 void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     auto filename = req.path[1..$];
-    auto query = req.query;
-    if (query.length) {
-        Exception e = collectException(handleSearch(filename, query["search"], res));
-        if (e) {
-            handleDir(filename, res);
-            return;
-        }
-        return;
-    }
     if (filename.length) {
         if (!filename.isDir()) {
-            handleFile(filename, res);
+            handleFile(filename, req, res);
             return;
         }
     }
-    handleDir(filename, res);
+    handleDir(filename, req, res);
 }
 
 URLRouter createRouter() {

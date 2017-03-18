@@ -3,7 +3,7 @@ include helpers.dt
 doctype html
 html
     head
-        title #{title}
+        title File browser
         meta(charset="utf-8")
         meta(name="viewport", content="width=device-width, initial-scale=1")
         - css("/static/bootstrap/css/bootstrap.min.css");
@@ -27,11 +27,14 @@ html
         div(class="container", style="padding-top: 60px;")
             div(class="panel panel-default")
                 div(class="panel-heading")
-                    a(href='..', class="btn btn-default", role="button")
-                        span(class="glyphicon glyphicon-circle-arrow-up")
-                        |Go back ...
-                    a(href='..', class="btn btn-default pull-right", role="button")
-                        span(class="glyphicon glyphicon-circle-arrow-up")
+                    div(class="btn-group")
+                        - foreach (name; dirList)
+                            button(type="button", class="btn btn-primary") #{name}
+                        a(href='..', class="btn btn-default", role="button")
+                            span(class="glyphicon glyphicon-circle-arrow-up")
+                            |Go back ...
+                    a(href='?download', class="btn btn-default pull-right", role="button")
+                        span(class="glyphicon glyphicon-download-alt")
                         |Download
                 div(class="panel-body")
                     pre(class="prettyprint", style="border: 0; background-color: transparent;")
