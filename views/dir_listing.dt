@@ -29,9 +29,6 @@ html
                     div(class="btn-group")
                         - foreach (name; dirList)
                             button(type="button", class="btn btn-primary") #{name}
-                    a(href='?=download', class="btn btn-default pull-right")
-                        span(class="glyphicon glyphicon-download-alt")
-                        |Download
                 div(class="panel-body", style="padding: 0;")
                     table(data-link="row", class="table table-hover table-condensed", style="margin-bottom: 0;")
                         - if (baseDir.length > 1)

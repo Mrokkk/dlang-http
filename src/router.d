@@ -8,13 +8,15 @@ import std.exception;
 import std.stdio: writeln;
 
 import vibe.vibe;
+import vibe.inet.path;
 import vibe.http.router;
+import vibe.http.fileserver;
 
 void handleFile(string filename, HTTPServerRequest req, HTTPServerResponse res) {
     auto query = req.query;
     if (query.length) {
         if (!collectException(query["download"])) {
-            res.writeBody(filename.readText());
+            sendFile(req, res, Path(filename));
             return;
         }
     }

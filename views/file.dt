@@ -31,7 +31,7 @@ html
                         - foreach (name; dirList)
                             button(type="button", class="btn btn-primary") #{name}
                         a(href='..', class="btn btn-default", role="button")
-                            span(class="glyphicon glyphicon-circle-arrow-up")
+                            span(class="glyphicon glyphicon-circle-arrow-left")
                             |Go back ...
                     a(href='?download', class="btn btn-default pull-right", role="button")
                         span(class="glyphicon glyphicon-download-alt")
