@@ -9,8 +9,10 @@ html
             div(class="panel panel-default")
                 div(class="panel-heading")
                     div(class="btn-group")
+                        - auto path = "";
                         - foreach (name; dirList)
-                            button(type="button", class="btn btn-primary") #{name}
+                            - path = buildPath(path, name);
+                            a(href="#{path}", role="button", class="btn btn-primary") #{name}
                         a(href='..', class="btn btn-default", role="button")
                             span(class="glyphicon glyphicon-circle-arrow-left")
                             |Go back ...
@@ -20,4 +22,3 @@ html
                 div(class="panel-body")
                     pre(class="prettyprint", style="border: 0; background-color: transparent;")
                         code #{file_content}
-

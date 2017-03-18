@@ -1,5 +1,5 @@
 - import std.file: DirEntry;
-- import std.path: asRelativePath;
+- import std.path: asRelativePath, dirName, buildPath, rootName;
 - import std.format;
 - import router: humanReadableSize;
 
@@ -23,14 +23,14 @@
                 - if (isDir)
                     |directory
                 - else
-                    |#{humanReadableSize(entry.size)}
+                    script(type='text/javascript'): |document.write(bytesToSize(#{entry.size}))
         td(width="30%", style="vertical-align: middle;") #{entry.timeLastModified}
 
-- void goBackEntry()
+- void upDir(string dirname)
     tr
         td(width="2%", style="vertical-align: middle;")
         td(width="38%", style="vertical-align: middle;")
-            a(href="..") ..
+            a(href='#{dirName(dirname)}') ..
         td(width="30%", style="vertical-align: middle;")
         td(width="30%", style="vertical-align: middle;")
 

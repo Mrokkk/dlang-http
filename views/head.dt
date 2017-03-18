@@ -2,10 +2,17 @@ head
     title File browser
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1")
+    - js("/static/jquery/jquery.min.js");
     - css("/static/bootstrap/css/bootstrap.min.css");
     - js("/static/bootstrap/js/bootstrap.min.js");
-    - js("/static/jquery/jquery.min.js");
     - css("/static/jasny-bootstrap/css/jasny-bootstrap.min.css");
     - js("/static/jasny-bootstrap/js/jasny-bootstrap.min.js");
     - js("/static/code-prettify/js/run_prettify.js");
     - css("/static/styles/style.css");
+    :javascript
+        function bytesToSize(bytes) {
+           var sizes = ['B', 'KiB', 'MiB', 'GiB', 'TiB'];
+           if (bytes == 0) return '0B';
+           var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+           return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+        };
