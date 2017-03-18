@@ -1,22 +1,13 @@
 - import std.file: DirEntry;
 - import std.path: asRelativePath;
 - import std.format;
+- import router: humanReadableSize;
 
 - void css(string url)
     link(rel='stylesheet', type='text/css', href='#{url}')
 
 - void js(string url)
     script(src='#{url}')
-
-- void humanReadableSize(ulong size)
-    - float fsize = size;
-    - auto suffix = "B";
-    - foreach (unit; ["", "Ki", "Mi", "Gi"])
-        - if (fsize < 1024)
-            |#{format("%3.1f%s%s", fsize, unit, suffix)}
-            - return;
-        - fsize /= 1024.0;
-    |#{format("%.1f%s%s", fsize, "Ti", suffix)}
 
 - void fileEntry(DirEntry entry, string baseDirName)
     - auto isDir = entry.isDir;
@@ -32,7 +23,7 @@
                 - if (isDir)
                     |directory
                 - else
-                    - humanReadableSize(entry.size);
+                    |#{humanReadableSize(entry.size)}
         td(width="30%", style="vertical-align: middle;") #{entry.timeLastModified}
 
 - void goBackEntry()

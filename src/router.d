@@ -12,6 +12,17 @@ import vibe.inet.path;
 import vibe.http.router;
 import vibe.http.fileserver;
 
+string humanReadableSize(ulong size) {
+    float fsize = size;
+    auto suffix = "B";
+    foreach (unit; ["", "Ki", "Mi", "Gi"]) {
+        if (fsize < 1024)
+            return format("%3.1f%s%s", fsize, unit, suffix);
+        fsize /= 1024.0;
+    }
+    return format("%.1f%s%s", fsize, "Ti", suffix);
+}
+
 void handleFile(string filename, HTTPServerRequest req, HTTPServerResponse res) {
     auto query = req.query;
     if (query.length) {
@@ -23,7 +34,7 @@ void handleFile(string filename, HTTPServerRequest req, HTTPServerResponse res) 
     auto title = "File content";
     auto file_content = filename.readText();
     auto dirList = pathSplitter("/" ~ filename);
-    res.render!("file.dt", dirList, file_content);
+    res.render!("file_listing.dt", dirList, file_content);
 }
 
 void handleDir(string dirName, HTTPServerRequest req, HTTPServerResponse res) {
