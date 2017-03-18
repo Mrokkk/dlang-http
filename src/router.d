@@ -15,7 +15,9 @@ void handleFile(string filename, HTTPServerResponse res) {
         res.writeBody(filename.readText(), "text/html");
     }
     else {
-        res.writeBody(filename.readText());
+        auto title = "File content";
+        auto file_content = filename.readText();
+        res.render!("file.dt", title, file_content);
     }
 }
 

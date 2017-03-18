@@ -11,6 +11,7 @@ html
         - js("/static/jquery/jquery.min.js");
         - css("/static/jasny-bootstrap/css/jasny-bootstrap.min.css");
         - js("/static/jasny-bootstrap/js/jasny-bootstrap.min.js");
+        - js("/static/code-prettify/js/run_prettify.js");
         - css("/static/styles/style.css");
 
     body(data-spy="scroll", data-target=".navbar")
@@ -25,16 +26,14 @@ html
 
         div(class="container", style="padding-top: 60px;")
             div(class="panel panel-default")
-                div(class="panel-heading clearfix")
-                    div(class="panel-title pull-left", style="padding-top: 7.5px;")
-                        |#{title}
-                    a(href='..', class="btn btn-default pull-right")
+                div(class="panel-heading")
+                    a(href='..', class="btn btn-default", role="button")
+                        span(class="glyphicon glyphicon-circle-arrow-up")
+                        |Go back ...
+                    a(href='..', class="btn btn-default pull-right", role="button")
                         span(class="glyphicon glyphicon-circle-arrow-up")
                         |Download
-                div(class="panel-body", style="padding: 0;")
-                    table(data-link="row", class="table table-hover table-condensed", style="margin-bottom: 0;")
-                        - if (baseDir.length > 1)
-                            - goBackEntry();
-                        - foreach (file; files)
-                            - fileEntry(file, baseDir);
+                div(class="panel-body")
+                    pre(class="prettyprint", style="border: 0; background-color: transparent;")
+                        code #{file_content}
 
