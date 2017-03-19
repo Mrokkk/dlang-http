@@ -1,5 +1,7 @@
 include helpers.dt
 
+- import std.file: readText, getSize;
+
 doctype html
 html
     include head.dt
@@ -13,5 +15,8 @@ html
                         span(class="glyphicon glyphicon-download-alt")
                         |Download
                 div(class="panel-body")
-                    pre(class="prettyprint", style="border: 0; background-color: transparent;")
-                        code #{file_content}
+                    - if (filename.getSize() < 500000)
+                        pre(id="fileContent", class="prettyprint", style="border: 0; background-color: transparent;")
+                            code #{filename.readText()}
+                    - else
+                        p(align="center") File too big

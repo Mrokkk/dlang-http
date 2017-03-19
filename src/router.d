@@ -21,9 +21,8 @@ void handleFile(string filename, HTTPServerRequest req, HTTPServerResponse res) 
         }
     }
     auto title = "File content";
-    auto file_content = filename.readText();
     auto dirList = pathSplitter("/" ~ filename);
-    res.render!("file_listing.dt", dirList, file_content);
+    res.render!("file_listing.dt", dirList, filename);
 }
 
 void handleDir(string dirName, HTTPServerRequest req, HTTPServerResponse res) {
