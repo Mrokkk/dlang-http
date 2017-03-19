@@ -9,8 +9,10 @@ html
             div(class="panel panel-default")
                 div(class="panel-heading clearfix")
                     div(class="btn-group")
+                        - auto path = "";
                         - foreach (name; dirList)
-                            button(type="button", class="btn btn-primary") #{name}
+                            - path = buildPath(path, name);
+                            a(href="#{path}", role="button", class="btn btn-primary") #{name}
                 div(class="panel-body", style="padding: 0;")
                     table(data-link="row", class="table table-hover table-condensed", style="margin-bottom: 0;")
                         - if (baseDir.length > 1)

@@ -44,7 +44,7 @@ void handleSearch(string dirName, string query, HTTPServerResponse res) {
     auto files = dirEntries(dirName, SpanMode.depth)
         .filter!(a => a.name.match(regex));
     auto baseDir = "/" ~ dirName;
-    auto dirList = [""];
+    string[] dirList;
     res.render!("dir_listing.dt", dirList, files, baseDir);
 }
 
