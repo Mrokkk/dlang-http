@@ -7,7 +7,8 @@ head
     - js("/static/bootstrap/js/bootstrap.min.js");
     - css("/static/jasny-bootstrap/css/jasny-bootstrap.min.css");
     - js("/static/jasny-bootstrap/js/jasny-bootstrap.min.js");
-    - js("/static/code-prettify/js/run_prettify.js");
+    - css("/static/code-prettify/prettify.css");
+    - js("/static/code-prettify/prettify.js");
     - css("/static/styles/style.css");
     :javascript
         function bytesToSize(bytes) {

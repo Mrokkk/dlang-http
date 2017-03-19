@@ -3,7 +3,7 @@ include helpers.dt
 doctype html
 html
     include head.dt
-    body(data-spy="scroll", data-target=".navbar")
+    body(data-spy="scroll", data-target=".navbar", onload="PR.prettyPrint()")
         include navbar.dt
         div(class="container", style="padding-top: 60px;")
             div(class="panel panel-default")
