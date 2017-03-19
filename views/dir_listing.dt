@@ -7,12 +7,8 @@ html
         include navbar.dt
         div(class="container", style="padding-top: 60px;")
             div(class="panel panel-default")
-                div(class="panel-heading clearfix")
-                    div(class="btn-group")
-                        - auto path = "";
-                        - foreach (name; dirList)
-                            - path = buildPath(path, name);
-                            a(href="#{path}", role="button", class="btn btn-primary") #{name}
+                div(class="panel-heading")
+                    - pathButtons(dirList);
                 div(class="panel-body", style="padding: 0;")
                     table(data-link="row", class="table table-hover table-condensed", style="margin-bottom: 0;")
                         - if (baseDir.length > 1)

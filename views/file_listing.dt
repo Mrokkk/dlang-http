@@ -8,14 +8,7 @@ html
         div(class="container", style="padding-top: 60px;")
             div(class="panel panel-default")
                 div(class="panel-heading")
-                    div(class="btn-group")
-                        - auto path = "";
-                        - foreach (name; dirList)
-                            - path = buildPath(path, name);
-                            a(href="#{path}", role="button", class="btn btn-primary") #{name}
-                        a(href='..', class="btn btn-default", role="button")
-                            span(class="glyphicon glyphicon-circle-arrow-left")
-                            |Go back ...
+                    - pathButtons(dirList);
                     a(href='?download', class="btn btn-default pull-right", role="button")
                         span(class="glyphicon glyphicon-download-alt")
                         |Download
