@@ -58,11 +58,19 @@ void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     handleDir(filename, req, res);
 }
 
+void handlePost(scope HTTPServerRequest req, scope HTTPServerResponse res) {
+    // TODO: handle exceptions, block access for unauthorized users
+    auto file = "upload" in req.files;
+    copyFile(file.tempPath, Path("./") ~ file.filename);
+    res.redirect("/");
+}
+
 URLRouter createRouter() {
     auto router = new URLRouter;
     auto fsettings = new HTTPFileServerSettings;
     fsettings.serverPathPrefix = "/static";
     router.get("/static/*", serveStaticFiles("./public/", fsettings));
     router.get("/*", &handleRequest);
+    router.post("/upload", &handlePost);
     return router;
 }

@@ -9,9 +9,27 @@ html
             div(class="panel panel-default")
                 div(class="panel-heading")
                     - pathButtons(dirList);
+                    a(href='#', class="btn btn-default pull-right", role="button", data-toggle="modal", data-target="#sendFileModal")
+                        span(class="glyphicon glyphicon glyphicon-upload")
+                        |Upload
                 div(class="panel-body", style="padding: 0;")
                     table(data-link="row", class="table table-hover table-condensed", style="margin-bottom: 0;")
                         - if (baseDir.length > 1)
                             - upDir(baseDir);
                         - foreach (file; files)
                             - fileEntry(file, baseDir);
+
+    div(id="sendFileModal", class="modal fade", role="dialog")
+        div(class="modal-dialog")
+            div(class="modal-content")
+                div(class="modal-header")
+                    button(type="button", class="close", data-dismiss="modal") &times
+                    h4(class="modal-title")
+                        |Send file
+                div(class="modal-body")
+                    form(id="uploadFile", enctype="multipart/form-data", method="post", action="/upload")
+                        input(id="fileupload", name="upload", value="file", type="file")
+                        input(type="submit", id="submit")
+                div(class="modal-footer")
+                    button(type="button", class="btn btn-default", data-dismiss="modal")
+                        |Close
