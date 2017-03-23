@@ -72,11 +72,11 @@ void handlePost(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     }
 }
 
-URLRouter createRouter() {
+URLRouter createRouter(string dir) {
     auto router = new URLRouter;
     auto fsettings = new HTTPFileServerSettings;
     fsettings.serverPathPrefix = "/static";
-    router.get("/static/*", serveStaticFiles("./public/", fsettings));
+    router.get("/static/*", serveStaticFiles(dir ~ "/public/", fsettings));
     router.get("/*", &handleRequest);
     router.post("/upload", &handlePost);
     return router;

@@ -3,6 +3,7 @@ import vibe.appmain;
 import vibe.http.server;
 import vibe.http.fileserver;
 import std.stdio;
+import std.path: dirName;
 import router: createRouter;
 
 void configureLogger() {
@@ -17,8 +18,8 @@ HTTPServerSettings createHTTPSettings() {
     return settings;
 }
 
-void main() {
+void main(string[] argv) {
     configureLogger();
-    listenHTTP(createHTTPSettings(), createRouter());
+    listenHTTP(createHTTPSettings(), createRouter(dirName(argv[0])));
     runApplication();
 }
