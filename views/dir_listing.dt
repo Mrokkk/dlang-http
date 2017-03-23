@@ -27,9 +27,15 @@ html
                     h4(class="modal-title")
                         |Send file
                 div(class="modal-body")
-                    form(id="uploadFile", enctype="multipart/form-data", method="post", action="/upload")
-                        input(id="fileupload", name="upload", value="file", type="file")
-                        input(type="submit", id="submit")
+                    form(class="form", role="form", enctype="multipart/form-data", method="post", action="/upload")
+                        div(class="form-group")
+                            label(for="fileInput") File
+                            input(id="fileInput", name="uploadedFile", type="file")
+                        div(class="form-group")
+                            label(for="passwordInput") Password
+                            input(id="passwordInput", class="form-control", name="password", type="text")
+                        input(type="submit")
+
                 div(class="modal-footer")
                     button(type="button", class="btn btn-default", data-dismiss="modal")
                         |Close

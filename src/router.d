@@ -59,10 +59,17 @@ void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
 }
 
 void handlePost(scope HTTPServerRequest req, scope HTTPServerResponse res) {
+    auto query = req.query;
     // TODO: handle exceptions, block access for unauthorized users
-    auto file = "upload" in req.files;
-    copyFile(file.tempPath, Path("./") ~ file.filename);
-    res.redirect("/");
+    auto file = "uploadedFile" in req.files;
+    auto password = "password" in req.form;
+    if (*password == "1234") {
+        copyFile(file.tempPath, Path("./") ~ file.filename);
+        res.redirect("/");
+    }
+    else {
+        res.writeBody("Unauthorized");
+    }
 }
 
 URLRouter createRouter() {
