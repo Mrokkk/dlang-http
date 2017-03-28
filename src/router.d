@@ -50,6 +50,10 @@ void handleSearch(string dirName, string query, HTTPServerResponse res) {
 void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     auto filename = req.path[1..$];
     if (filename.length) {
+        if (!filename.exists()) {
+            res.statusCode = 404;
+            return;
+        }
         if (!filename.isDir()) {
             handleFile(filename, req, res);
             return;
