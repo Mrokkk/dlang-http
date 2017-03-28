@@ -54,6 +54,10 @@ void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
             res.statusCode = 404;
             return;
         }
+        if (asRelativePath(filename, getcwd()).startsWith("..")) {
+            res.writeBody("Fuck you!");
+            return;
+        }
         if (!filename.isDir()) {
             handleFile(filename, req, res);
             return;
