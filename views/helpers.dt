@@ -35,6 +35,7 @@
 
 - void searchForm()
     div(class="input-group")
+        span(class="input-group-addon") This dir
         input(type="text", class="form-control", name="search", placeholder="Search...", style="width: 300px;")
         div(class="input-group-btn")
             button(class="btn btn-default", type="submit")

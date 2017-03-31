@@ -12,6 +12,10 @@ import vibe.inet.path;
 import vibe.http.router;
 import vibe.http.fileserver;
 
+void handle404(HTTPServerRequest req, HTTPServerResponse res) {
+    res.render!("404.dt");
+}
+
 void handleFile(string filename, HTTPServerRequest req, HTTPServerResponse res) {
     auto query = req.query;
     if (query.length) {
@@ -51,11 +55,11 @@ void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     auto filename = req.path[1..$];
     if (filename.length) {
         if (!filename.exists()) {
-            res.statusCode = 404;
+            handle404(req, res);
             return;
         }
         if (asRelativePath(filename, getcwd()).startsWith("..")) {
-            res.writeBody("Fuck you!");
+            handle404(req, res);
             return;
         }
         if (!filename.isDir()) {
