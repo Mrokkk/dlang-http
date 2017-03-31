@@ -6,22 +6,31 @@ include helpers.dt
 doctype html
 html
     include head.dt
-    body(data-spy="scroll", data-target=".navbar", onload="PR.prettyPrint()")
+    body(data-spy="scroll", data-target=".navbar")
         include navbar.dt
         div(class="container", style="padding-top: 60px;")
             div(class="panel panel-default")
-                div(class="panel-heading")
+                div(id="panel-head", class="panel-heading")
                     - pathButtons(dirList);
                     a(href='?download', class="btn btn-default pull-right", role="button")
                         span(class="glyphicon glyphicon-download-alt")
                         |Download
-                div(class="panel-body")
+                div(id="panel-body", class="panel-body")
+                    :javascript
+                        $(document).ready(function(){
+                            $("#panel-head").click(function(){
+                                $("#panel-body").toggle();
+                            });
+                            $("#fileContent").load("?download", function() {
+                                prettyPrint()
+                            });
+                        });
                     - if (filename.endsWith(".jpg"))
                         center
                             img(src="?download")
                     - else
                         - if (filename.getSize() < 500000)
                             pre(id="fileContent", class="prettyprint", style="border: 0; background-color: transparent;")
-                                code #{filename.readText()}
                         - else
                             p(align="center") File too big
+
