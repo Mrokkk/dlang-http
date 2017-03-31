@@ -13,6 +13,9 @@ HTTPServerSettings createHTTPSettings() {
         bindAddresses = ["0.0.0.0"];
         errorPageHandler = (req, res, err) {
             auto error = res.statusCode;
+            if (error != 401 && error != 404) {
+                error = 500;
+            }
             res.render!("error.dt", error);
         };
     }

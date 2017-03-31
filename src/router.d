@@ -53,6 +53,10 @@ void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     writeln(dateTime, " ", req.peer, " ", req.method, " ", req.requestURL, " ", req.headers["User-Agent"]);
     auto filename = req.path[1..$];
     if (filename.length) {
+        if (req.path == "/favicon.ico") {
+            res.redirect("/static/favicon.ico");
+            return;
+        }
         if (!filename.exists()) {
             res.statusCode = 404;
             return;
@@ -72,6 +76,8 @@ void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
 void handlePost(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     auto query = req.query;
     // TODO: handle exceptions, block access for unauthorized users
+    auto dateTime = Clock.currTime();
+    writeln(dateTime, " ", req.peer, " ", req.method, " ", req.requestURL, " ", req.headers["User-Agent"]);
     auto file = "uploadedFile" in req.files;
     auto password = "password" in req.form;
     if (*password == "1234") {
@@ -79,6 +85,7 @@ void handlePost(scope HTTPServerRequest req, scope HTTPServerResponse res) {
         res.redirect("/");
     }
     else {
+        removeFile(file.tempPath);
         res.statusCode = 401;
     }
 }
