@@ -5,20 +5,13 @@ import std.path;
 import std.regex;
 import std.algorithm;
 import std.exception;
+import std.datetime;
 import std.stdio: writeln;
 
 import vibe.vibe;
 import vibe.inet.path;
 import vibe.http.router;
 import vibe.http.fileserver;
-
-void handle404(HTTPServerRequest req, HTTPServerResponse res) {
-    res.render!("404.dt");
-}
-
-void handleUnauthorized(HTTPServerRequest req, HTTPServerResponse res) {
-    res.render!("401.dt");
-}
 
 void handleFile(string filename, HTTPServerRequest req, HTTPServerResponse res) {
     auto query = req.query;
@@ -56,14 +49,16 @@ void handleSearch(string dirName, string query, HTTPServerResponse res) {
 }
 
 void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
+    auto dateTime = Clock.currTime();
+    writeln(dateTime, " ", req.peer, " ", req.method, " ", req.requestURL, " ", req.headers["User-Agent"]);
     auto filename = req.path[1..$];
     if (filename.length) {
         if (!filename.exists()) {
-            handle404(req, res);
+            res.statusCode = 404;
             return;
         }
         if (asRelativePath(filename, getcwd()).startsWith("..")) {
-            handle404(req, res);
+            res.statusCode = 404;
             return;
         }
         if (!filename.isDir()) {
@@ -84,7 +79,7 @@ void handlePost(scope HTTPServerRequest req, scope HTTPServerResponse res) {
         res.redirect("/");
     }
     else {
-        handleUnauthorized(req, res);
+        res.statusCode = 401;
     }
 }
 

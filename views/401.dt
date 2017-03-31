@@ -1,9 +1,0 @@
-include helpers.dt
-doctype html
-html
-    include head.dt
-    body(data-spy="scroll", data-target=".navbar")
-        include navbar.dt
-        div(class="container", style="padding-top: 60px;")
-            center
-                img(src="/static/401.jpg")

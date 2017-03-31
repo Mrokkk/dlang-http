@@ -6,4 +6,4 @@ html
         include navbar.dt
         div(class="container", style="padding-top: 60px;")
             center
-                img(src="/static/404.jpg")
+                img(src="/static/#{error}.jpg")
