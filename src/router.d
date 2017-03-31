@@ -16,6 +16,10 @@ void handle404(HTTPServerRequest req, HTTPServerResponse res) {
     res.render!("404.dt");
 }
 
+void handleUnauthorized(HTTPServerRequest req, HTTPServerResponse res) {
+    res.render!("401.dt");
+}
+
 void handleFile(string filename, HTTPServerRequest req, HTTPServerResponse res) {
     auto query = req.query;
     if (query.length) {
@@ -80,7 +84,7 @@ void handlePost(scope HTTPServerRequest req, scope HTTPServerResponse res) {
         res.redirect("/");
     }
     else {
-        res.writeBody("Unauthorized");
+        handleUnauthorized(req, res);
     }
 }
 
