@@ -8,8 +8,11 @@ html
             div(class="panel panel-default")
                 div(id="panel-head", class="panel-heading")
                     div(id="path-buttons", class="btn-group")
-                    a(href='?download', class="btn btn-default pull-right", role="button")
+                    a(id="download-btn", href="#", class="btn btn-default pull-right", role="button")
                         span(class="glyphicon glyphicon-download-alt")
                         |Download
+                    :javascript
+                        file_location = '/files' + window.location.pathname;
+                        $("#download-btn").attr("href", file_location);
                 div(id="panel-body", class="panel-body")
     - js("/static/file_listing.js");
