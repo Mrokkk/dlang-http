@@ -24,7 +24,7 @@ struct DirListing {
 void handleSearch(string dirName, string query, HTTPServerResponse res) {
     auto regex = std.regex.regex!string(".*" ~ query ~ ".*", "i");
     auto files = dirEntries(dirName, SpanMode.depth)
-        .filter!(a => a.name.match(regex));
+        .filter!(a => a.name.baseName.match(regex));
     DirListing.Entry[] entries;
     foreach (file; files) {
         entries ~= DirListing.Entry(file.name, file.size, file.timeLastModified.toISOExtString(), file.isDir);
