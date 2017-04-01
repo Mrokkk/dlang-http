@@ -13,6 +13,17 @@ import vibe.inet.path;
 import vibe.http.router;
 import vibe.http.fileserver;
 
+struct DirListing {
+
+    struct Entry {
+        string filename;
+        ulong size;
+        string mtime;
+        bool isDir;
+    };
+
+};
+
 void handleFile(string filename, HTTPServerRequest req, HTTPServerResponse res) {
     auto query = req.query;
     if (query.length) {
@@ -21,31 +32,22 @@ void handleFile(string filename, HTTPServerRequest req, HTTPServerResponse res) 
             return;
         }
     }
-    auto title = "File content";
-    auto dirList = pathSplitter("/" ~ filename);
-    res.render!("file_listing.dt", dirList, filename);
+    res.render!("file_listing.dt");
 }
 
 void handleDir(string dirName, HTTPServerRequest req, HTTPServerResponse res) {
-    auto query = req.query;
-    if (query.length) {
-        if (!collectException(handleSearch(dirName, query["search"], res))) {
-            return;
-        }
-    }
-    auto files = dirEntries(dirName, SpanMode.shallow, false);
-    auto baseDir = "/" ~ dirName;
-    auto dirList = pathSplitter("/" ~ dirName);
-    res.render!("dir_listing.dt", dirList, files, baseDir);
+    res.render!("dir_listing.dt");
 }
 
 void handleSearch(string dirName, string query, HTTPServerResponse res) {
     auto regex = std.regex.regex!string(".*" ~ query ~ ".*", "i");
     auto files = dirEntries(dirName, SpanMode.depth)
         .filter!(a => a.name.match(regex));
-    auto baseDir = "/" ~ dirName;
-    string[] dirList;
-    res.render!("dir_listing.dt", dirList, files, baseDir);
+    DirListing.Entry[] entries;
+    foreach (file; files) {
+        entries ~= DirListing.Entry(file.name, file.size, file.timeLastModified.toISOExtString(), file.isDir);
+    }
+    res.writeJsonBody = entries.serializeToJson();
 }
 
 void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
@@ -73,21 +75,28 @@ void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     handleDir(filename, req, res);
 }
 
-void handlePost(scope HTTPServerRequest req, scope HTTPServerResponse res) {
-    auto query = req.query;
-    // TODO: handle exceptions, block access for unauthorized users
+void handleApi(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     auto dateTime = Clock.currTime();
-    writeln(dateTime, " ", req.peer, " ", req.method, " ", req.requestURL, " ", req.headers["User-Agent"]);
-    auto file = "uploadedFile" in req.files;
-    auto password = "password" in req.form;
-    if (*password == "1234") {
-        copyFile(file.tempPath, Path("./") ~ file.filename);
-        res.redirect("/");
+    writeln(dateTime, " API ", req.peer, " ", req.method, " ", req.requestURL, " ", req.headers["User-Agent"]);
+    auto path = req.json["path"].get!string;
+    if (path == "") {
+        res.statusCode = 404;
+        return;
     }
-    else {
-        removeFile(file.tempPath);
-        res.statusCode = 401;
+    path = path[1..$];
+    if (!collectException(req.json["search"].get!string)) {
+        auto search = req.json["search"].get!string;
+        writeln("search: ", search);
+        handleSearch(path, search, res);
+        return;
     }
+    DirListing.Entry[] entries;
+    auto files = dirEntries(path, SpanMode.shallow, false);
+    foreach (file; files) {
+        entries ~= DirListing.Entry(file.name, file.size, file.timeLastModified.toISOExtString(), file.isDir);
+    }
+    res.writeJsonBody = entries.serializeToJson();
+    return;
 }
 
 URLRouter createRouter(string dir) {
@@ -96,6 +105,6 @@ URLRouter createRouter(string dir) {
     fsettings.serverPathPrefix = "/static";
     router.get("/static/*", serveStaticFiles(dir ~ "/public/", fsettings));
     router.get("/*", &handleRequest);
-    router.post("/upload", &handlePost);
+    router.post("/api", &handleApi);
     return router;
 }

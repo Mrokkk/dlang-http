@@ -8,34 +8,7 @@ html
         div(class="container", style="padding-top: 60px;")
             div(class="panel panel-default")
                 div(class="panel-heading")
-                    - pathButtons(dirList);
-                    a(href='#', class="btn btn-default pull-right", role="button", data-toggle="modal", data-target="#sendFileModal")
-                        span(class="glyphicon glyphicon glyphicon-upload")
-                        |Upload
+                    div(id="path-buttons", class="btn-group")
                 div(class="panel-body", style="padding: 0;")
                     table(data-link="row", class="table table-hover table-condensed", style="margin-bottom: 0;")
-                        - if (baseDir.length > 1)
-                            - upDir(baseDir);
-                        - foreach (file; files)
-                            - fileEntry(file, baseDir);
-
-    div(id="sendFileModal", class="modal fade", role="dialog")
-        div(class="modal-dialog")
-            div(class="modal-content")
-                div(class="modal-header")
-                    button(type="button", class="close", data-dismiss="modal") &times
-                    h4(class="modal-title")
-                        |Send file
-                div(class="modal-body")
-                    form(class="form", role="form", enctype="multipart/form-data", method="post", action="/upload")
-                        div(class="form-group")
-                            label(for="fileInput") File
-                            input(id="fileInput", name="uploadedFile", type="file")
-                        div(class="form-group")
-                            label(for="passwordInput") Password
-                            input(id="passwordInput", class="form-control", name="password", type="text")
-                        input(type="submit")
-
-                div(class="modal-footer")
-                    button(type="button", class="btn btn-default", data-dismiss="modal")
-                        |Close
+    - js("/static/dir_listing.js");

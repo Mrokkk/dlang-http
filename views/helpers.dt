@@ -1,37 +1,8 @@
-- import std.file: DirEntry;
-- import std.path: asRelativePath, dirName, buildPath, rootName;
-- import std.format;
-
 - void css(string url)
     link(rel='stylesheet', type='text/css', href='#{url}')
 
 - void js(string url)
     script(src='#{url}')
-
-- void fileEntry(DirEntry entry, string baseDirName)
-    - auto isDir = entry.isDir;
-    tr
-        td(width="2%", style="vertical-align: middle;")
-            - if (isDir)
-                i(class="glyphicon glyphicon-folder-open")
-            - else
-                i(class="glyphicon glyphicon-file")
-        td(width="38%", style="vertical-align: middle;")
-            a(href='/#{entry.name}') #{asRelativePath("/" ~ entry.name, baseDirName)}
-            td(width="30%", style="vertical-align: middle;")
-                - if (isDir)
-                    |directory
-                - else
-                    script(type='text/javascript'): |document.write(bytesToSize(#{entry.size}))
-        td(width="30%", style="vertical-align: middle;") #{entry.timeLastModified}
-
-- void upDir(string dirname)
-    tr
-        td(width="2%", style="vertical-align: middle;")
-        td(width="38%", style="vertical-align: middle;")
-            a(href='#{dirName(dirname)}') ..
-        td(width="30%", style="vertical-align: middle;")
-        td(width="30%", style="vertical-align: middle;")
 
 - void searchForm()
     div(class="input-group")
@@ -40,10 +11,3 @@
         div(class="input-group-btn")
             button(class="btn btn-default", type="submit")
                 i(class="glyphicon glyphicon-search")
-
-- void pathButtons(R)(R list)
-    div(class="btn-group")
-        - auto path = "";
-        - foreach (name; list)
-            - path = buildPath(path, name);
-            a(href="#{path}", role="button", class="btn btn-primary") #{name}
