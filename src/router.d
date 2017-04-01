@@ -45,6 +45,7 @@ void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     handleDir(filename, req, res);
 }
 
+// TODO: use callback to modify headers, use mime.text.isTextualData
 void add_statics(URLRouter router, string prefix, string path) {
     auto fsettings = new HTTPFileServerSettings;
     fsettings.serverPathPrefix = prefix;
