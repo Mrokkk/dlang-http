@@ -1,5 +1,4 @@
 include helpers.dt
-
 doctype html
 html
     include head.dt
@@ -7,8 +6,9 @@ html
         include navbar.dt
         div(class="container", style="padding-top: 60px;")
             div(class="panel panel-default")
-                div(class="panel-heading")
+                div(id="panel-head", class="panel-heading")
                     div(id="path-buttons", class="btn-group")
-                div(class="panel-body", style="padding: 0;")
-                    table(data-link="row", class="table table-hover table-condensed", style="margin-bottom: 0;")
-    - js("/static/dir_listing.js");
+                div(id="panel-body", class="panel-body", style="padding: 0;")
+                    center
+                        img(id="loading", src="/static/loading.gif", align="middle")
+    - js("/static/mainView.js");

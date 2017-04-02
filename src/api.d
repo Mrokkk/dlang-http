@@ -10,7 +10,7 @@ import std.exception: collectException;
 
 import vibe.vibe;
 
-struct DirListing {
+struct Response {
 
     struct Entry {
         string filename;
@@ -19,39 +19,57 @@ struct DirListing {
         bool isDir;
     };
 
+    Entry[] entries;
+    bool file;
+
+};
+
+struct Request {
+
+    string path;
+    string search;
+
 };
 
 void handleSearch(string dirName, string query, HTTPServerResponse res) {
     auto regex = std.regex.regex!string(".*" ~ query ~ ".*", "i");
     auto files = dirEntries(dirName, SpanMode.depth)
         .filter!(a => a.name.baseName.match(regex));
-    DirListing.Entry[] entries;
+    Response.Entry[] entries;
     foreach (file; files) {
-        entries ~= DirListing.Entry(file.name, file.size, file.timeLastModified.toISOExtString(), file.isDir);
+        entries ~= Response.Entry(file.name, file.size, file.timeLastModified.toISOExtString(), file.isDir);
     }
-    res.writeJsonBody = entries.serializeToJson();
+    Response resp;
+    resp.entries = entries;
+    res.writeJsonBody = resp.serializeToJson();
 }
 
 void handleApi(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     auto dateTime = Clock.currTime();
     writeln(dateTime, " ", req.peer, " ", req.method, " ", req.requestURL, " ", req.headers["User-Agent"]);
-    auto path = req.json["path"].get!string;
-    if (path == "") {
+    Request request = deserializeJson!Request(req.json);
+    Response response;
+    if (request.path == "") {
         res.statusCode = 404;
         return;
     }
-    path = path[1..$];
-    if (!collectException(req.json["search"].get!string)) {
-        auto search = req.json["search"].get!string;
-        writeln("search: ", search);
-        handleSearch(path, search, res);
+    auto path = request.path[1..$];
+    if (path != "") {
+        if (path.isFile()) {
+            response.file = true;
+            res.writeJsonBody = response.serializeToJson();
+            return;
+        }
+    }
+    if (request.search != "") {
+        handleSearch(path, request.search, res);
         return;
     }
-    DirListing.Entry[] entries;
     auto files = dirEntries(path, SpanMode.shallow, false);
     foreach (file; files) {
-        entries ~= DirListing.Entry(file.name, file.size, file.timeLastModified.toISOExtString(), file.isDir);
+        response.entries ~= Response.Entry(file.name, file.size, file.timeLastModified.toISOExtString(), file.isDir);
     }
-    res.writeJsonBody = entries.serializeToJson();
+    response.file = false;
+    res.writeJsonBody = response.serializeToJson();
     return;
 }

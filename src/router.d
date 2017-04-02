@@ -10,15 +10,10 @@ import vibe.vibe;
 import vibe.inet.path;
 import vibe.http.router;
 import vibe.http.fileserver;
+
+import mime.text;
+
 import api: handleApi;
-
-void handleFile(string filename, HTTPServerRequest req, HTTPServerResponse res) {
-    res.render!("file_listing.dt");
-}
-
-void handleDir(string dirName, HTTPServerRequest req, HTTPServerResponse res) {
-    res.render!("dir_listing.dt");
-}
 
 void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     auto dateTime = Clock.currTime();
@@ -37,25 +32,31 @@ void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
             res.statusCode = 404;
             return;
         }
-        if (!filename.isDir()) {
-            handleFile(filename, req, res);
-            return;
-        }
     }
-    handleDir(filename, req, res);
+    res.render!("mainView.dt");
 }
 
-// TODO: use callback to modify headers, use mime.text.isTextualData
-void add_statics(URLRouter router, string prefix, string path) {
+void callback(scope HTTPServerRequest req, scope HTTPServerResponse res, ref string path) {
+    auto dateTime = Clock.currTime();
+    writeln(dateTime, " ", req.peer, " STATIC_FILE ", req.method, " ", req.requestURL, " ", req.headers["User-Agent"]);
+    if (isTextualData(path.read(16))) {
+        res.contentType = "text/plain; charset-UTF-8";
+    }
+}
+
+void add_statics(URLRouter router, string prefix, string path, void delegate(scope HTTPServerRequest req, scope HTTPServerResponse res, ref string path) callback) {
     auto fsettings = new HTTPFileServerSettings;
     fsettings.serverPathPrefix = prefix;
+    fsettings.preWriteCallback = callback;
     router.get(prefix ~ "/*", serveStaticFiles(path, fsettings));
 }
 
 URLRouter createRouter(string dir) {
     auto router = new URLRouter;
-    add_statics(router, "/static", dir ~ "/public/");
-    add_statics(router, "/files", "./");
+    add_statics(router, "/static", dir ~ "/public/", null);
+    add_statics(router, "/files", "./", (req, res, ref path) {
+        callback(req, res, path);
+    });
     router.get("/*", &handleRequest);
     router.post("/api", &handleApi);
     return router;
