@@ -111,8 +111,9 @@ function file(data) {
                 var pre = document.createElement("pre");
                 pre.id = "fileContent";
                 pre.className = "prettyprint";
-                pre.style = "border: 0; background-color: transparent;";
+                pre.style = "border: 0; background-color: transparent; font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 12px;";
                 $("#panel-body").append(pre);
+                $("#panel-body").attr("style", "");
                 $("#fileContent").load(file_location, function() {
                     prettyPrint();
                 });
