@@ -24,6 +24,9 @@ static class Logger {
             default:
                 break;
         }
+        if (res.statusCode != 200) {
+            color = "\033[1;31m";
+        }
         writeln(dateTime.toSimpleString(), " ", req.peer, " ", color, req.method, " ", req.requestURL, " ", req.headers["User-Agent"], reset);
     }
 

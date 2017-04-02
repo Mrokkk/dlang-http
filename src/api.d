@@ -60,6 +60,9 @@ void handleApi(scope HTTPServerRequest req, scope HTTPServerResponse res) {
             res.writeJsonBody = response.serializeToJson();
             return;
         }
+        else {
+            response.entries ~= Response.Entry("..", 0, "", true);
+        }
     }
     if (request.search != "") {
         handleSearch(path, request.search, res);
