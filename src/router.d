@@ -1,22 +1,20 @@
 module router;
 
-import std.file;
-import std.path;
-import std.exception;
-import std.datetime;
-import std.stdio: writeln;
+import std.file: read, readText;
+import std.exception: collectException;
 
-import vibe.vibe;
-import vibe.inet.path;
-import vibe.http.router;
-import vibe.http.fileserver;
+import vibe.http.router: URLRouter;
+import vibe.http.server: HTTPServerRequest, HTTPServerResponse;
+import vibe.http.fileserver: HTTPFileServerSettings, serveStaticFiles;
 
-import mime.text;
+import mime.text: isTextualData;
 
 import api: handleApi;
 import logger: Logger;
 
+private {
 string html;
+}
 
 void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     Logger.log(req, res);

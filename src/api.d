@@ -1,13 +1,15 @@
 module api;
 
-import std.regex;
-import std.path;
-import std.file;
 import std.datetime: Clock;
-import std.algorithm: filter;
+import std.regex: regex, match;
 import std.exception: collectException;
+import std.algorithm: filter, startsWith;
+import std.path: baseName, asRelativePath;
+import std.file: isFile, exists, dirEntries, SpanMode, getcwd;
 
-import vibe.vibe;
+import vibe.data.json: serializeToJson, deserializeJson;
+import vibe.http.server: HTTPServerRequest, HTTPServerResponse;
+
 import logger: Logger;
 
 struct Response {
@@ -32,9 +34,9 @@ struct Request {
 };
 
 void handleSearch(string dirName, string query, HTTPServerResponse res) {
-    auto regex = std.regex.regex!string(".*" ~ query ~ ".*", "i");
+    auto reg = regex!string(".*" ~ query ~ ".*", "i");
     auto files = dirEntries(dirName, SpanMode.depth)
-        .filter!(a => a.name.baseName.match(regex));
+        .filter!(a => a.name.baseName.match(reg));
     Response.Entry[] entries;
     foreach (file; files) {
         entries ~= Response.Entry(file.name, file.size, file.timeLastModified.toISOExtString(), file.isDir);

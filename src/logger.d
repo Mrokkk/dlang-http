@@ -1,10 +1,10 @@
 module logger;
 
-import std.conv;
+import std.conv: to;
 import std.stdio: writeln;
 import std.datetime: Clock;
 
-import vibe.http.server;
+import vibe.http.server: HTTPServerRequest, HTTPServerResponse, HTTPMethod;
 
 static class Logger {
 

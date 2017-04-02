@@ -1,7 +1,7 @@
 import std.path: dirName;
 
-import vibe.http.server;
 import vibe.core.core: runApplication;
+import vibe.http.server: listenHTTP, HTTPServerSettings;
 
 import router: createRouter;
 import logger: Logger;
