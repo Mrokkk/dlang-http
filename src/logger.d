@@ -2,6 +2,7 @@ module logger;
 
 import std.conv: to;
 import std.stdio: writeln;
+import std.algorithm: startsWith;
 import std.datetime: Clock;
 
 import vibe.http.server: HTTPServerRequest, HTTPServerResponse, HTTPMethod;
@@ -29,6 +30,9 @@ static class Logger {
         if (res.statusCode != 200) {
             color = "\033[1;31m";
             additional = " " ~ to!string(res.statusCode);
+        }
+        if (req.requestURL.startsWith("/api")) {
+            color = "\033[1;35m";
         }
         writeln(dateTime.toSimpleString(), " ", req.peer, " ", color, req.method, " ", req.requestURL, " ", req.headers["User-Agent"], additional, reset);
     }
