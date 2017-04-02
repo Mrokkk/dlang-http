@@ -107,6 +107,7 @@ function file(data) {
         url: file_location,
         complete: function(xhr) {
             var contentType = xhr.getResponseHeader('Content-Type').split("/")[0];
+            var contentSize = xhr.getResponseHeader('Content-Length');
             if (contentType == "text") {
                 var pre = document.createElement("pre");
                 pre.id = "fileContent";
@@ -115,7 +116,9 @@ function file(data) {
                 $("#panel-body").append(pre);
                 $("#panel-body").attr("style", "");
                 $("#fileContent").load(file_location, function() {
-                    prettyPrint();
+                    if (contentSize < 300000) {
+                        prettyPrint();
+                    }
                 });
             }
             else if (contentType == "image") {
