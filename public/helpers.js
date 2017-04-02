@@ -127,7 +127,7 @@ function file(data) {
             else {
                 var p = document.createElement("p");
                 p.align = "center";
-                p.innerHTML = "Binary file";
+                p.innerHTML = "<br><br>Binary file<br><br>";
                 $("#panel-body").append(p);
             }
             $("#loading").hide();

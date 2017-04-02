@@ -17,6 +17,7 @@ HTTPServerSettings createHTTPSettings() {
             if (error != 401 && error != 404) {
                 res.statusCode = 500;
             }
+            res.writeBody("Error processing request");
         };
     }
     return settings;

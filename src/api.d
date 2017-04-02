@@ -46,12 +46,8 @@ void handleSearch(string dirName, string query, HTTPServerResponse res) {
 
 void handleApi(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     Logger.log(req, res);
-    Request request;
+    Request request = deserializeJson!Request(req.json);
     Response response;
-    if (collectException(deserializeJson!Request(req.json), request)) {
-        res.statusCode = 500;
-        return;
-    }
     if (request.path == "") {
         res.statusCode = 404;
         return;
@@ -59,6 +55,10 @@ void handleApi(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     auto path = request.path[1..$];
     if (path != "") {
         if (asRelativePath(path, getcwd()).startsWith("..")) {
+            res.statusCode = 404;
+            return;
+        }
+        if (!path.exists()) {
             res.statusCode = 404;
             return;
         }
