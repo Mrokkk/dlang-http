@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>File browser</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <script src="/static/jquery/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css"/>
+        <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/jasny-bootstrap/css/jasny-bootstrap.min.css"/>
+        <script src="/static/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/code-prettify/prettify.css"/>
+        <script src="/static/code-prettify/prettify.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/styles/style.css"/>
+    </head>
+    <body data-spy="scroll" data-target=".navbar">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <div class="navbar-header">
+                            <a href="/" class="navbar-brand">File browser</a>
+                        </div>
+                    </li>
+                    <li>
+                        <form class="navbar-form">
+                            <div class="input-group">
+                                <span class="input-group-addon">This dir</span>
+                                <input type="text" class="form-control" name="search" placeholder="Search..." style="width: 300px;"/>
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default" type="submit">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container" style="padding-top: 60px;">
+            <div class="panel panel-default">
+                <div id="panel-head" class="panel-heading">
+                    <div id="path-buttons" class="btn-group"></div>
+                </div>
+                <div id="panel-body" class="panel-body" style="padding: 0;">
+                    <center>
+                        <img id="loading" src="/static/loading.gif" align="middle"/>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="/static/mainView.js"></script>
+</html>

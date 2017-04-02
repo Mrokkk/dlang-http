@@ -1,4 +1,0 @@
-- void css(string url)
-    link(rel='stylesheet', type='text/css', href='#{url}')
-- void js(string url)
-    script(src='#{url}')

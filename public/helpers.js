@@ -129,8 +129,9 @@ function file(data) {
             }
             $("#loading").hide();
         },
-        fail: function() {
+        error: function(xhr, textStatus, errorThrown) {
             $("#loading").hide();
+            alert("Failed");
         }
     });
 }
@@ -149,11 +150,10 @@ function sendAndReceiveJson(jsonData, callback) {
                 file(data);
             $("#loading").hide();
         },
-        fail: function() {
-            $("#loading").hide();
+        error: function(xhr, textStatus, errorThrown) {
+            $("#loading").attr("src", "/static/" + xhr.status + ".jpg");
         }
     });
-
 }
 
 function getQueryString(field) {

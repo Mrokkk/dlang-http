@@ -1,9 +1,8 @@
-import vibe.vibe;
-import vibe.appmain;
-import vibe.http.server;
-import vibe.http.fileserver;
-import std.stdio;
 import std.path: dirName;
+
+import vibe.http.server;
+import vibe.core.core: runApplication;
+
 import router: createRouter;
 import logger: Logger;
 
@@ -16,9 +15,8 @@ HTTPServerSettings createHTTPSettings() {
             Logger.log(req, res);
             auto error = res.statusCode;
             if (error != 401 && error != 404) {
-                error = 500;
+                res.statusCode = 500;
             }
-            res.render!("error.dt", error);
         };
     }
     return settings;

@@ -3,7 +3,6 @@ module api;
 import std.regex;
 import std.path;
 import std.file;
-import std.stdio: writeln;
 import std.datetime: Clock;
 import std.algorithm: filter;
 import std.exception: collectException;
@@ -55,6 +54,10 @@ void handleApi(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     }
     auto path = request.path[1..$];
     if (path != "") {
+        if (asRelativePath(path, getcwd()).startsWith("..")) {
+            res.statusCode = 404;
+            return;
+        }
         if (path.isFile()) {
             response.file = true;
             res.writeJsonBody = response.serializeToJson();

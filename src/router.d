@@ -16,24 +16,15 @@ import mime.text;
 import api: handleApi;
 import logger: Logger;
 
+string html;
+
 void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     Logger.log(req, res);
-    auto filename = req.path[1..$];
-    if (filename.length) {
-        if (req.path == "/favicon.ico") {
-            res.redirect("/static/favicon.ico");
-            return;
-        }
-        if (!filename.exists()) {
-            res.statusCode = 404;
-            return;
-        }
-        if (asRelativePath(filename, getcwd()).startsWith("..")) {
-            res.statusCode = 404;
-            return;
-        }
+    if (req.path == "/favicon.ico") {
+        res.redirect("/static/favicon.ico");
+        return;
     }
-    res.render!("mainView.dt");
+    res.writeBody(html, "text/html; charset-UTF-8");
 }
 
 void callback(scope HTTPServerRequest req, scope HTTPServerResponse res, ref string path) {
@@ -51,6 +42,7 @@ void add_statics(URLRouter router, string prefix, string path, void delegate(sco
 }
 
 URLRouter createRouter(string dir) {
+    html = (dir ~ "/public/index.html").readText();
     auto router = new URLRouter;
     add_statics(router, "/static", dir ~ "/public/", null);
     add_statics(router, "/files", "./", (req, res, ref path) {
