@@ -99,6 +99,9 @@ function dir(data) {
 function file(data) {
     file_location = '/files' + window.location.pathname;
     createDownloadBtn(file_location);
+    $("#this-badge").html("This file");
+    $("#search-field").attr("disabled", true);
+    $("#search-btn").prop("disabled", true);
     $.ajax({
         type: 'HEAD',
         url: file_location,

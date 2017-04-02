@@ -34,7 +34,8 @@ void callback(scope HTTPServerRequest req, scope HTTPServerResponse res, ref str
     }
 }
 
-void add_statics(URLRouter router, string prefix, string path, void delegate(scope HTTPServerRequest req, scope HTTPServerResponse res, ref string path) callback) {
+void add_statics(URLRouter router, string prefix, string path,
+        void delegate(scope HTTPServerRequest, scope HTTPServerResponse, ref string) callback) {
     auto fsettings = new HTTPFileServerSettings;
     fsettings.serverPathPrefix = prefix;
     fsettings.preWriteCallback = callback;
