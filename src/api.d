@@ -9,6 +9,7 @@ import std.algorithm: filter;
 import std.exception: collectException;
 
 import vibe.vibe;
+import logger: Logger;
 
 struct Response {
 
@@ -45,8 +46,7 @@ void handleSearch(string dirName, string query, HTTPServerResponse res) {
 }
 
 void handleApi(scope HTTPServerRequest req, scope HTTPServerResponse res) {
-    auto dateTime = Clock.currTime();
-    writeln(dateTime, " ", req.peer, " ", req.method, " ", req.requestURL, " ", req.headers["User-Agent"]);
+    Logger.log(req, res);
     Request request = deserializeJson!Request(req.json);
     Response response;
     if (request.path == "") {
