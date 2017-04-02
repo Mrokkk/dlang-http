@@ -145,7 +145,7 @@ function file(data) {
 
 function sendAndReceiveJson(jsonData, callback) {
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         url: '/api',
         data: JSON.stringify(jsonData),
         dataType: 'json',

@@ -47,7 +47,7 @@ URLRouter createRouter(string dir) {
     add_statics(router, "/files", "./", (req, res, ref path) {
         callback(req, res, path);
     });
+    router.get("/api", &handleApi);
     router.get("/*", &handleRequest);
-    router.post("/api", &handleApi);
     return router;
 }

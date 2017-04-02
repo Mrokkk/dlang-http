@@ -1,5 +1,6 @@
 module api;
 
+import std.uri: decode;
 import std.datetime: Clock;
 import std.regex: regex, match;
 import std.exception: collectException;
@@ -7,8 +8,8 @@ import std.algorithm: filter, startsWith;
 import std.path: baseName, asRelativePath;
 import std.file: isFile, exists, dirEntries, SpanMode, getcwd;
 
-import vibe.data.json: serializeToJson, deserializeJson;
 import vibe.http.server: HTTPServerRequest, HTTPServerResponse;
+import vibe.data.json: serializeToJson, deserializeJson;
 
 import logger: Logger;
 
@@ -48,7 +49,7 @@ void handleSearch(string dirName, string query, HTTPServerResponse res) {
 
 void handleApi(scope HTTPServerRequest req, scope HTTPServerResponse res) {
     Logger.log(req, res);
-    Request request = deserializeJson!Request(req.json);
+    Request request = deserializeJson!Request(req.queryString.decode);
     Response response;
     if (request.path == "") {
         res.statusCode = 404;
