@@ -7,11 +7,15 @@ import router: createRouter;
 
 HTTPServerSettings createHTTPSettings() {
     auto settings = new HTTPServerSettings;
+    auto resetColor = "\033[0m";
+    auto userAgentColor = "\033[0;35m";
+    auto methodColor = "\033[32m";
+    auto responseColor = "\033[1;34m";
     with (settings) {
         port = 8080;
         bindAddresses = ["0.0.0.0"];
         accessLogToConsole = true;
-        accessLogFormat = "%h - %u %t \"%r\" %s %b \"%{User-Agent}i\"";
+        accessLogFormat = "%h - %u %t " ~ methodColor ~ "\"%r\"" ~ responseColor ~ " %s %b " ~ userAgentColor ~ "\"%{User-Agent}i\"" ~ resetColor;
         errorPageHandler = (req, res, err) {
             auto error = res.statusCode;
             if (error != 401 && error != 404) {
