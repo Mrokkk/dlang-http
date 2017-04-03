@@ -11,8 +11,6 @@ import std.file: isFile, exists, dirEntries, SpanMode, getcwd;
 import vibe.http.server: HTTPServerRequest, HTTPServerResponse;
 import vibe.data.json: serializeToJson, deserializeJson;
 
-import logger: Logger;
-
 struct Response {
 
     struct Entry {
@@ -48,7 +46,6 @@ void handleSearch(string dirName, string query, HTTPServerResponse res) {
 }
 
 void handleApi(scope HTTPServerRequest req, scope HTTPServerResponse res) {
-    Logger.log(req, res);
     Request request = deserializeJson!Request(req.queryString.decode);
     Response response;
     if (request.path == "") {

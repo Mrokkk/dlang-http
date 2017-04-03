@@ -10,14 +10,12 @@ import vibe.http.fileserver: HTTPFileServerSettings, serveStaticFiles;
 import mime.text: isTextualData;
 
 import api: handleApi;
-import logger: Logger;
 
 private {
 string html;
 }
 
 void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
-    Logger.log(req, res);
     if (req.path == "/favicon.ico") {
         res.redirect("/static/favicon.ico");
         return;
@@ -26,7 +24,6 @@ void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
 }
 
 void callback(scope HTTPServerRequest req, scope HTTPServerResponse res, ref string path) {
-    Logger.log(req, res);
     if (isTextualData(path.read(16))) {
         res.contentType = "text/plain; charset-UTF-8";
     }
