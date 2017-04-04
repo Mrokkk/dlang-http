@@ -1,7 +1,6 @@
 module router;
 
 import std.file: read, readText;
-import std.exception: collectException;
 
 import vibe.http.router: URLRouter;
 import vibe.http.server: HTTPServerRequest, HTTPServerResponse;
