@@ -6,3 +6,9 @@ body {
 a:hover {
     text-decoration: none;
 }
+#fileContent {
+    border: 0;
+    background-color: transparent;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 12px;
+}
