@@ -31,22 +31,24 @@ private struct Request {
 
 };
 
-private void handleSearch(const ref string dirName, const ref string query, ref Response res) {
+private void fillResponse(F)(ref Response response, ref F files) {
+    foreach (file; files) {
+        response.entries ~= Response.Entry(file.name, file.size, file.timeLastModified.toISOExtString(), file.isDir);
+    }
+}
+
+private void handleSearch(const ref string dirName, const ref string query, ref Response response) {
     auto reg = regex!string(".*" ~ query ~ ".*", "i");
     auto files = dirEntries(dirName, SpanMode.depth)
         .filter!(a => a.name.baseName.match(reg));
-    Response.Entry[] entries;
-    foreach (file; files) {
-        res.entries ~= Response.Entry(file.name, file.size, file.timeLastModified.toISOExtString(), file.isDir);
-    }
+    fillResponse(response, files);
+    response.file = false;
 }
 
 private void handleDir(const ref string path, ref Response response) {
     response.entries ~= Response.Entry("..", 0, "", true);
     auto files = dirEntries(path, SpanMode.shallow, false);
-    foreach (file; files) {
-        response.entries ~= Response.Entry(file.name, file.size, file.timeLastModified.toISOExtString(), file.isDir);
-    }
+    fillResponse(response, files);
     response.file = false;
 }
 
