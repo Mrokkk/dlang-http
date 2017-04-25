@@ -25,6 +25,7 @@ void handleRequest(scope HTTPServerRequest req, scope HTTPServerResponse res) {
 void callback(scope HTTPServerRequest req, scope HTTPServerResponse res, ref string path) {
     if (isTextualData(path.read(16))) {
         res.contentType = "text/plain; charset-UTF-8";
+        res.headers["Content-Disposition"] = "attachment";
     }
 }
 
