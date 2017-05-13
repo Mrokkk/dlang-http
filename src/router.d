@@ -1,5 +1,6 @@
 module router;
 
+import std.functional;
 import std.file: read, readText;
 
 import vibe.http.router: URLRouter;
@@ -41,9 +42,7 @@ URLRouter createRouter(string dir) {
     html = (dir ~ "/public/index.html").readText();
     auto router = new URLRouter;
     add_statics(router, "/static", dir ~ "/public/", null);
-    add_statics(router, "/files", "./", (req, res, ref path) {
-        callback(req, res, path);
-    });
+    add_statics(router, "/files", "./", (&callback).toDelegate());
     router.get("/api", &handleApi);
     router.get("/*", &handleRequest);
     return router;
