@@ -109,7 +109,7 @@ function file(data) {
             var contentType = xhr.getResponseHeader('Content-Type').split("/")[0];
             var contentSize = xhr.getResponseHeader('Content-Length');
             if (contentType == "text") {
-                var pre = document.createElement("pre");
+                var pre = document.createElement("xmp");
                 pre.id = "fileContent";
                 pre.className = "prettyprint";
                 $("#panel-body").append(pre);
