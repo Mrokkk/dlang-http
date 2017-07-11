@@ -12,6 +12,10 @@ function formatCell(cell, proc) {
     cell.width = proc.toString() + "%"
 }
 
+function dirname(path) {
+    return path.replace(/\/[^\/]*$/,'');
+}
+
 function basename(path) {
     return path.split('/').reverse()[0];
 }
@@ -44,16 +48,12 @@ function createPathButtons() {
             currentLocation = self;
             listing();
         }, false);
-        button.href = "#";
+        button.href = "javascript:void(0);";
         button.role = "button";
         button.className = "btn btn-primary";
         button.text = entry;
         $("#path-buttons").append(button);
     });
-}
-
-function dirname(path) {
-    return path.replace(/\/[^\/]*$/,'');
 }
 
 function handleDir(data) {
@@ -69,7 +69,7 @@ function handleDir(data) {
         formatCell(iconCell, 2);
         formatCell(nameCell, 98);
         var a = document.createElement("a");
-        a.href = "#";
+        a.href = "javascript:void(0);";
         var self = this;
         a.addEventListener("click", function() {
             if (self.filename == "..") {
