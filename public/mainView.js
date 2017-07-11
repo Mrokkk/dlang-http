@@ -1,3 +1,5 @@
+var currentLocation;
+
 function bytesToSize(bytes) {
    var sizes = ['B', 'KiB', 'MiB', 'GiB', 'TiB'];
    if (bytes == 0) return '0B';
@@ -5,7 +7,7 @@ function bytesToSize(bytes) {
    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
 }
 
-function format_cell(cell, proc) {
+function formatCell(cell, proc) {
     cell.style = "vertical-align: middle;";
     cell.width = proc.toString() + "%"
 }
@@ -22,7 +24,7 @@ function stripTrailingSlash(str) {
 }
 
 function createPathButtons() {
-    var pathname = stripTrailingSlash(window.location.pathname);
+    var pathname = stripTrailingSlash(currentLocation);
     var dirList = [];
     if (pathname == "" || pathname == "/")
         dirList = [""];
@@ -37,10 +39,12 @@ function createPathButtons() {
             link += entry + "/";
         }
         var button = document.createElement("a");
-        if (link != "/")
-            button.href = stripTrailingSlash(link);
-        else
-            button.href = link;
+        var self = link;
+        button.addEventListener("click", function() {
+            currentLocation = self;
+            listing();
+        }, false);
+        button.href = "#";
         button.role = "button";
         button.className = "btn btn-primary";
         button.text = entry;
@@ -48,63 +52,59 @@ function createPathButtons() {
     });
 }
 
-function createDownloadBtn(href) {
-    var btn = document.createElement("a");
-    btn.id = "download-btn";
-    btn.className = "btn btn-default pull-right";
-    btn.role = "button";
-    btn.innerHTML = "<span class='glyphicon glyphicon-download-alt'></span> Download";
-    btn.href = href;
-    $("#panel-head").append(btn);
+function dirname(path) {
+    return path.replace(/\/[^\/]*$/,'');
 }
 
-function dir(data) {
+function handleDir(data) {
     var table = document.createElement("table");
     table.setAttribute("data-link", "row");
     table.className = "table table-hover table-condensed";
     table.style = "margin-bottom: 0;";
     var tbl_body = document.createElement("tbody");
     $.each(data.entries, function() {
-        var tbl_row = tbl_body.insertRow();
-        var icon_cell = tbl_row.insertCell();
-        var name_cell = tbl_row.insertCell();
-        var size_cell = tbl_row.insertCell();
-        var mtime_cell = tbl_row.insertCell();
-        format_cell(icon_cell, 2);
-        format_cell(name_cell, 38);
-        format_cell(size_cell, 30);
-        format_cell(mtime_cell, 30);
+        var tableRow = tbl_body.insertRow();
+        var iconCell = tableRow.insertCell();
+        var nameCell = tableRow.insertCell();
+        formatCell(iconCell, 2);
+        formatCell(nameCell, 98);
         var a = document.createElement("a");
-        a.href = "/" + this.filename;
+        a.href = "#";
+        var self = this;
+        a.addEventListener("click", function() {
+            if (self.filename == "..") {
+                if (currentLocation != "/") {
+                    currentLocation = dirname(currentLocation);
+                }
+            }
+            else {
+                currentLocation = self.filename.slice(1);
+            }
+            listing();
+        }, false);
         a.innerHTML = basename(this.filename);
-        name_cell.appendChild(a);
+        nameCell.appendChild(a);
         if (this.isDir) {
             var i = document.createElement("i");
             i.className = "glyphicon glyphicon-folder-open";
-            icon_cell.appendChild(i);
-            size_cell.appendChild(document.createTextNode("directory"));
+            iconCell.appendChild(i);
         }
         else {
             var i = document.createElement("i");
             i.className = "glyphicon glyphicon-file";
-            icon_cell.appendChild(i);
-            size_cell.appendChild(document.createTextNode(bytesToSize(this.size)));
+            iconCell.appendChild(i);
         }
-        mtime_cell.appendChild(document.createTextNode(this.mtime));
     })
     table.appendChild(tbl_body);
     $("#panel-body").append(table);
+    $("#loading").hide();
 }
 
-function file(data) {
-    file_location = '/files' + window.location.pathname;
-    createDownloadBtn(file_location);
-    $("#this-badge").html("This file");
-    $("#search-field").attr("disabled", true);
-    $("#search-btn").prop("disabled", true);
+function handleFile(data) {
+    fileLocation = '/files' + currentLocation;
     $.ajax({
         type: 'HEAD',
-        url: file_location,
+        url: fileLocation,
         complete: function(xhr) {
             var contentType = xhr.getResponseHeader('Content-Type').split("/")[0];
             var contentSize = xhr.getResponseHeader('Content-Length');
@@ -114,16 +114,14 @@ function file(data) {
                 pre.className = "prettyprint";
                 $("#panel-body").append(pre);
                 $("#panel-body").attr("style", "");
-                $("#fileContent").load(file_location, function() {
-                    if (contentSize < 300000) {
-                        prettyPrint();
-                    }
+                $("#fileContent").load(fileLocation, function() {
+                    $("#loading").hide();
                 });
             }
             else if (contentType == "image") {
                 var center = document.createElement("center");
                 var img = document.createElement("img");
-                img.src = file_location;
+                img.src = fileLocation;
                 center.appendChild(img);
                 $("#panel-body").append(center);
             }
@@ -142,19 +140,27 @@ function file(data) {
     });
 }
 
-function sendAndReceiveJson(jsonData, callback) {
+function dispatcher(data) {
+    $("#path-buttons").html("");
+    $("#panel-body").html("<center><img id='loading' src='/static/loading.gif' align='middle'/></center>");
+    createPathButtons();
+    if (!data.file) {
+        handleDir(data);
+    }
+    else {
+        handleFile(data);
+    }
+}
+
+function readDir(path, callback) {
     $.ajax({
         type: 'GET',
         url: '/api',
-        data: JSON.stringify(jsonData),
+        data: JSON.stringify({"path": path}),
         dataType: 'json',
         contentType: "application/json; charset=utf-8",
         success: function (data) {
-            if (!data.file)
-                dir(data);
-            else
-                file(data);
-            $("#loading").hide();
+            callback(data);
         },
         error: function(xhr, textStatus, errorThrown) {
             $("#loading").attr("src", "/static/" + xhr.status + ".jpg");
@@ -162,25 +168,9 @@ function sendAndReceiveJson(jsonData, callback) {
     });
 }
 
-function getQueryString(field) {
-    var href = window.location.href;
-    var reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
-    var string = reg.exec(href);
-    return string ? string[1] : null;
-}
-
 function listing() {
-    createPathButtons();
     $(document).ready(function(){
-        var jsonData = {
-            "path": window.location.pathname,
-            "search": ""
-        };
-        var searchQuery = getQueryString("search");
-        if (searchQuery != null) {
-            jsonData.search = searchQuery;
-        }
-        sendAndReceiveJson(jsonData, null);
+        readDir(currentLocation, dispatcher);
     });
 }
 
@@ -189,5 +179,10 @@ $.when(
         $(deferred.resolve);
     })
 ).done(function() {
+    currentLocation = "/";
+    $("#menuButton").click(function() {
+        $('#wrapper').toggleClass('toggled');
+    });
     listing();
 });
+

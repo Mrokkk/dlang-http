@@ -27,7 +27,6 @@ private struct Response {
 private struct Request {
 
     string path;
-    string search;
 
 };
 
@@ -35,14 +34,6 @@ private void fillResponse(F)(ref Response response, ref F files) {
     foreach (file; files) {
         response.entries ~= Response.Entry(file.name, file.size, file.timeLastModified.toISOExtString(), file.isDir);
     }
-}
-
-private void handleSearch(const ref string dirName, const ref string query, ref Response response) {
-    auto reg = regex!string(".*" ~ query ~ ".*", "i");
-    auto files = dirEntries(dirName, SpanMode.depth)
-        .filter!(a => a.name.baseName.match(reg));
-    fillResponse(response, files);
-    response.file = false;
 }
 
 private void handleDir(const ref string path, ref Response response) {
@@ -77,12 +68,7 @@ void handleApi(scope HTTPServerRequest req, scope HTTPServerResponse res) {
         response.file = true;
     }
     else {
-        if (request.search != "") {
-            handleSearch(path, request.search, response);
-        }
-        else {
-            handleDir(path, response);
-        }
+        handleDir(path, response);
     }
     res.writeJsonBody = response.serializeToJson();
     return;

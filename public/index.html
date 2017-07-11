@@ -16,30 +16,28 @@
     </head>
     <body data-spy="scroll" data-target=".navbar">
         <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
+            <div class="container-fluid" style="width:100%;">
                 <ul class="nav navbar-nav">
                     <li>
                         <div class="navbar-header">
-                            <a href="/" class="navbar-brand">File browser</a>
+                            <a href="#" class="navbar-brand" id="menuButton">
+                                <i class="glyphicon glyphicon-menu-hamburger"></i> Menu
+                            </a>
                         </div>
-                    </li>
-                    <li>
-                        <form class="navbar-form">
-                            <div class="input-group">
-                                <span id="this-badge" class="input-group-addon">This dir</span>
-                                <input id="search-field" type="text" class="form-control" name="search" placeholder="Search..." style="width: 300px;"/>
-                                <div class="input-group-btn">
-                                    <button id="search-btn" class="btn btn-default" type="submit">
-                                        <i class="glyphicon glyphicon-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
                     </li>
                 </ul>
             </div>
         </nav>
-        <div class="container" style="padding-top: 60px;">
+    <div id="wrapper">
+        <div class="overlay"></div>
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">Menu</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="container-fluid" style="padding-top: 60px; width:100%;">
             <div class="panel panel-default">
                 <div id="panel-head" class="panel-heading">
                     <div id="path-buttons" class="btn-group"></div>
