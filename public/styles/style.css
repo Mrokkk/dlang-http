@@ -47,7 +47,7 @@ html { height: 100%;}
     margin-top: 45px;
     overflow-y: auto;
     overflow-x: hidden;
-    background: #1a1a1a;
+    background: rgb(51, 51, 51);
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
@@ -101,11 +101,10 @@ html { height: 100%;}
       -moz-transition:  width .2s ease-in;
        -ms-transition:  width .2s ease-in;
             transition: width .2s ease-in;
-
 }
 
 .sidebar-nav li:before {
-    background-color: #0099cc;
+    background-color: rgb(40, 96, 144);
 }
 
 .sidebar-nav li:hover:before,
