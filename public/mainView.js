@@ -142,7 +142,8 @@ function handleFile(data) {
 
 function dispatcher(data) {
     $("#path-buttons").html("");
-    $("#panel-body").html("<center><img id='loading' src='/static/loading.gif' align='middle'/></center>");
+    $("#panel-body").html("<center><img id='loading' src='/static/loading.gif' align='middle'/></center>")
+        .attr("style", "margin:0;padding:0;");
     createPathButtons();
     if (!data.file) {
         handleDir(data);
