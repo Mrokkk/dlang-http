@@ -29,11 +29,7 @@ function stripTrailingSlash(str) {
 
 function createPathButtons() {
     var pathname = stripTrailingSlash(currentLocation);
-    var dirList = [];
-    if (pathname == "" || pathname == "/")
-        dirList = [""];
-    else
-        dirList = pathname.split("/");
+    var dirList = pathname == "" || pathname == "/" ? [""] : pathname.split("/");
     var link = "/";
     dirList.forEach(function (entry) {
         if (entry == "") {
@@ -45,12 +41,9 @@ function createPathButtons() {
         var button = document.createElement("a");
         var self = link;
         button.addEventListener("click", function() {
-            if (self != "/") {
-                currentLocation = stripTrailingSlash(self);
-            }
-            else {
-                currentLocation = self;
-            }
+            currentLocation = self != "/"
+                ? currentLocation = stripTrailingSlash(self)
+                : currentLocation = self;
             listing();
         }, false);
         button.href = "javascript:void(0);";
