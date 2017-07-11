@@ -185,3 +185,21 @@ $.when(
     listing();
 });
 
+function about() {
+    $("#path-buttons").html("");
+    $("#panel-body").html("")
+        .attr("style", "margin:0;padding:20px;");
+    var button = document.createElement("a");
+    button.addEventListener("click", function() {
+        listing();
+    }, false);
+    button.href = "javascript:void(0);";
+    button.role = "button";
+    button.className = "btn btn-primary";
+    button.text = "Go back";
+    $("#path-buttons").append(button);
+    var aboutDoc = document.createElement("p");
+    aboutDoc.innerHTML = "<h2>http-file-browser</h2>"
+    $("#panel-body").append(aboutDoc);
+}
+
