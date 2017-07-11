@@ -45,7 +45,12 @@ function createPathButtons() {
         var button = document.createElement("a");
         var self = link;
         button.addEventListener("click", function() {
-            currentLocation = self;
+            if (self != "/") {
+                currentLocation = stripTrailingSlash(self);
+            }
+            else {
+                currentLocation = self;
+            }
             listing();
         }, false);
         button.href = "javascript:void(0);";
